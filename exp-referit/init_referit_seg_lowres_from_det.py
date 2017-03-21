@@ -1,6 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
 import tensorflow as tf
+import sys
+import os; os.environ['CUDA_VISIBLE_DEVICES'] = sys.argv[1]
 
 from models import text_objseg_model as segmodel
 
@@ -45,7 +47,7 @@ with tf.Session() as sess:
 ################################################################################
 
 # Clear the graph
-tf.python.ops.reset_default_graph()
+tf.reset_default_graph()
 
 # Inputs
 text_seq_batch = tf.placeholder(tf.int32, [T, N])  # one batch per sentence

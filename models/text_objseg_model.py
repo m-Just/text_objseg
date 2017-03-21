@@ -23,9 +23,9 @@ def text_objseg_region(text_seq_batch, imcrop_batch, spatial_batch, num_vocab,
 
     # L2-normalize the features (except for spatial_batch)
     # and concatenate them
-    feat_all = tf.concat(1, [tf.nn.l2_normalize(feat_lang, 1),
+    feat_all = tf.concat([tf.nn.l2_normalize(feat_lang, 1),
                              tf.nn.l2_normalize(feat_vis, 1),
-                             spatial_batch])
+                             spatial_batch], 1)
 
     # MLP Classifier over concatenate feature
     with tf.variable_scope('classifier'):
@@ -54,9 +54,9 @@ def text_objseg_full_conv(text_seq_batch, imcrop_batch, num_vocab, embed_dim,
     # L2-normalize the features (except for spatial_batch)
     # and concatenate them along axis 3 (channel dimension)
     spatial_batch = tf.convert_to_tensor(generate_spatial_batch(N, featmap_H, featmap_W))
-    feat_all = tf.concat(3, [tf.nn.l2_normalize(feat_lang, 3),
+    feat_all = tf.concat([tf.nn.l2_normalize(feat_lang, 3),
                              tf.nn.l2_normalize(feat_vis, 3),
-                             spatial_batch])
+                             spatial_batch], 3)
 
     # MLP Classifier over concatenate feature
     with tf.variable_scope('classifier'):
@@ -76,7 +76,11 @@ def text_objseg_upsample32s(text_seq_batch, imcrop_batch, num_vocab, embed_dim,
     # MLP Classifier over concatenate feature
     with tf.variable_scope('classifier'):
         # bilinear upsampling (no bias)
-        upsample32s = deconv('upsample32s', mlp_l2, kernel_size=64,
-            stride=32, output_dim=1, bias_term=False)
+        #upsample32s = deconv('upsample32s', mlp_l2, kernel_size=64,
+        #  stride=32, output_dim=1, bias_term=False)
+        upsample8s = deconv('upsample8s', mlp_l2, kernel_size=16,
+            stride=8, output_dim=1, bias_term=False)
+        upsample32s = deconv('upsample32s', upsample8s, kernel_size=8,
+            stride=4, output_dim=1, bias_term=False)
 
-    return upsample32s
+    return upsample8s, upsample32s

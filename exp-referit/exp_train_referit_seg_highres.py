@@ -62,7 +62,7 @@ label_batch = tf.placeholder(tf.float32, [N, input_H, input_W, 1])
 # Outputs
 scores = segmodel.text_objseg_upsample32s(text_seq_batch, imcrop_batch,
     num_vocab, embed_dim, lstm_dim, mlp_hidden_dims,
-    vgg_dropout=vgg_dropout, mlp_dropout=mlp_dropout)
+    vgg_dropout=vgg_dropout, mlp_dropout=mlp_dropout)[1]
 
 ################################################################################
 # Collect trainable variables, regularized variables and learning rates
