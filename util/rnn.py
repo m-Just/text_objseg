@@ -69,7 +69,7 @@ def lstm_layer(name, seq_bottom, const_bottom, output_dim, num_layers=1,
         c_size = initial_state[0].c.get_shape().as_list()
         h_size = initial_state[0].h.get_shape().as_list()
         initial_state[0].c.set_shape([batch_size, c_size[1]])
-	initial_state[0].h.set_shape([batch_size, h_size[1]])
+        initial_state[0].h.set_shape([batch_size, h_size[1]])
 
         # Split along time dimension and flatten each component.
         # `inputs` is a list.
