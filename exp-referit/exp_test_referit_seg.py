@@ -50,7 +50,7 @@ imcrop_batch = tf.placeholder(tf.float32, [N, input_H, input_W, 3])
 # Outputs
 scores = segmodel.text_objseg_upsample32s(text_seq_batch, imcrop_batch,
     num_vocab, embed_dim, lstm_dim, mlp_hidden_dims, vgg_dropout=False,
-    mlp_dropout=False)
+    mlp_dropout=False)[1]
 
 # Load pretrained model
 snapshot_restorer = tf.train.Saver()
