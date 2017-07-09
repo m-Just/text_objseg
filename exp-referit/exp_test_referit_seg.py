@@ -7,6 +7,7 @@ import numpy as np
 import tensorflow as tf
 import json
 import timeit
+import matplotlib.pyplot as plt
 
 from models import text_objseg_model as segmodel
 from util import im_processing, text_processing, eval_tools
@@ -87,6 +88,10 @@ for imname in imlist:
 # Testing
 ################################################################################
 
+# create path for saving segmentation results
+if not os.path.isdir('test_result'):
+    os.mkdir('test_result')
+
 cum_I, cum_U = 0, 0
 eval_seg_iou_list = [.5, .6, .7, .8, .9]
 seg_correct = np.zeros(len(eval_seg_iou_list), dtype=np.int32)
@@ -105,6 +110,15 @@ for n_im in range(num_im):
     processed_im = skimage.img_as_ubyte(im_processing.resize_and_pad(im, input_H, input_W))
     if processed_im.ndim == 2:
         processed_im = np.tile(processed_im[:, :, np.newaxis], (1, 1, 3))
+
+    # Saving original image
+    if n_im < num_im / 10:
+        save_dir = 'test_result/' + str(n_im)
+        if not os.path.isdir(save_dir):
+            os.mkdir(save_dir)
+        #lt.imsave('/'.join([save_dir, imname]), im)
+        query_file = open('/'.join([save_dir, 'query.txt']), 'w')
+        query_no = 1
 
     imcrop_val[...] = processed_im.astype(np.float32) - segmodel.vgg_net.channel_mean
     for imcrop_name, _, description in flat_query_dict[imname]:
@@ -130,6 +144,18 @@ for n_im in range(num_im):
             eval_seg_iou = eval_seg_iou_list[n_eval_iou]
             seg_correct[n_eval_iou] += (I/U >= eval_seg_iou)
         seg_total += 1
+
+        # Saving segmentation results
+        if n_im < num_im / 10:
+            plt.imsave('/'.join([save_dir, imname[:-4]+'_'+str(query_no)+'_result.jpg']), predicts)
+            plt.imsave('/'.join([save_dir, imname[:-4]+'_'+str(query_no)+'_gt.jpg']), mask)
+            query_file.write((imname[:-4]+'_'+str(query_no)+'>'+description+'\n').encode('utf-8'))
+            query_no += 1
+
+
+    if n_im < num_im / 10:
+        query_file.flush()
+        query_file.close()
 
 # Print results
 print('Final results on the whole test set')

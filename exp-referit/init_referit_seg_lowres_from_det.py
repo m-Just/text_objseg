@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import tensorflow as tf
 import sys
-import os; os.environ['CUDA_VISIBLE_DEVICES'] = sys.argv[1]
+import os;# os.environ['CUDA_VISIBLE_DEVICES'] = sys.argv[1]
 
 from models import text_objseg_model as segmodel
 

@@ -62,9 +62,9 @@ fc8_crop = vgg_net.vgg_fc8(imcrop_batch, 'vgg_local', apply_dropout=False)
 
 # L2-normalize the features (except for spatial_batch)
 # and concatenate them along axis 1 (feature dimension)
-feat_all = tf.concat(1, [tf.nn.l2_normalize(lstm_top_batch, 1),
+feat_all = tf.concat([tf.nn.l2_normalize(lstm_top_batch, 1),
                          tf.nn.l2_normalize(fc8_crop_batch, 1),
-                         spatial_batch])
+                         spatial_batch], 1)
 
 # Outputs
 # MLP Classifier over concatenate feature
