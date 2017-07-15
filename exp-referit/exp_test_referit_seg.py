@@ -116,7 +116,6 @@ for n_im in range(num_im):
         save_dir = 'test_result/' + str(n_im)
         if not os.path.isdir(save_dir):
             os.mkdir(save_dir)
-        #lt.imsave('/'.join([save_dir, imname]), im)
         query_file = open('/'.join([save_dir, 'query.txt']), 'w')
         query_no = 1
 
