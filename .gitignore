@@ -6,12 +6,14 @@
 *-checkpoint.ipynb
 *~
 *.swp
+log*
+test_result*
 
 exp-*/data/*
 exp-*/log/*
 exp-*/results*/*
 exp-*/caffemodel/*
-exp-*/tfmodel/*
+exp-*/tfmodel*/*
 exp-*/__obsolete__/*
 exp-referit/referit-dataset/*
 
